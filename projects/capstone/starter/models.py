@@ -2,6 +2,8 @@
 import os
 from sqlalchemy import Column, String, Integer, create_engine, DateTime
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+
 
 import json
 
@@ -22,7 +24,13 @@ def setup_db(app, database_path=database_path):
     db.app = app
     db.init_app(app)
     db.create_all()
+    '''Using migrate to create DB'''
+    migrate = Migrate(app, db)
 
+
+def db_drop_and_create_all():
+    db.drop_all()
+    db.create_all()
 
 '''
 Actors
@@ -30,12 +38,12 @@ Actors
 '''
 
 
-class Actors(db.Model):
-    __tablename__ = 'questions'
+class Actor(db.Model):
+    __tablename__ = 'actors'
 
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    age = Integer(String)
+    age = Integer()
     gender = Column(String)
 
     def __init__(self, name, age, gender):
@@ -69,8 +77,8 @@ Movies
 '''
 
 
-class Movies(db.Model):
-    __tablename__ = 'categories'
+class Movie(db.Model):
+    __tablename__ = 'movies'
 
     id = Column(Integer, primary_key=True)
     title = Column(String)
