@@ -12,8 +12,24 @@ def create_app(test_config=None):
   setup_db(app)
   CORS(app, resources={r"*": {"origins": "*"}})
 
+  '''
+  After_request decorator to set Access-Control-Allow
+  '''
+
+  @app.after_request
+  def after_request(response):
+      response.headers.add(
+          'Access-Control-Allow-Headers',
+          'Content-Type, Authorization,true')
+      response.headers.add(
+          'Access-Control-Allow-Methods',
+          'GET, PATCH, POST, DELETE, OPTIONS')
+      return response
+
+
   ''' ACTORS ROUTES '''
   ''' GET all /actors'''
+
   @app.route('/actors', methods=['GET'])
   def get_actors():
       try:
@@ -32,6 +48,7 @@ def create_app(test_config=None):
           abort(500)
 
   ''' POST /actors'''
+
   @app.route('/actors', methods=['POST'])
   def post_actors():
       try:
@@ -53,11 +70,13 @@ def create_app(test_config=None):
           abort(400)
 
   ''' DELETE /actors'''
+
   @app.route('/actors/<int:actor_id>', methods=['DELETE'])
   def delete_actors(actor_id):
       try:
         actor = Actor.query.filter(
             Actor.id == actor_id).one_or_none()
+            
         if actor_id is None:
             abort(404)
         else:
@@ -68,6 +87,36 @@ def create_app(test_config=None):
                 'status': 200,
                 'success': True,
                 'deleted': actor_id,
+                'total_questions': len(query)
+            })
+      except:
+          abort(422)
+
+  ''' PATCH /actors'''
+  
+  @app.route('/actors/<int:actor_id>', methods=['PATCH'])
+  def patch_actors(actor_id):
+      try:
+        actor = Actor.query.filter(
+            Actor.id == actor_id).one_or_none()
+        if actor_id is None:
+            abort(404)
+        else:
+            body = request.get_json()
+            if not body:
+                abort(400)
+
+            actor.name = body['name']
+            actor.age = body['age']
+            actor.gender = body['gender']
+            actor.update()
+
+            query = Actor.query.all()
+
+            return jsonify({
+                'status': 200,
+                'success': True,
+                'updated': actor.format(),
                 'total_questions': len(query)
             })
       except:
