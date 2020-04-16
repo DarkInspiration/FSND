@@ -2,7 +2,9 @@ import os
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+
 from models import Actor, Movie, setup_db, db_drop_and_create_all
+from auth.auth import AuthError, requires_auth
 
 
 def create_app(test_config=None):
@@ -31,7 +33,8 @@ def create_app(test_config=None):
   ''' GET all /actors'''
 
   @app.route('/actors', methods=['GET'])
-  def get_actors():
+  @requires_auth("get:actors")
+  def get_actors(jwt):
       try:
         query = Actor.query.all()
 
@@ -50,7 +53,8 @@ def create_app(test_config=None):
   ''' POST /actors'''
 
   @app.route('/actors', methods=['POST'])
-  def post_actors():
+  @requires_auth("post:actor")
+  def post_actors(jwt):
       try:
         body = request.get_json()
         if not body:
@@ -72,7 +76,8 @@ def create_app(test_config=None):
   ''' DELETE /actors'''
 
   @app.route('/actors/<int:actor_id>', methods=['DELETE'])
-  def delete_actors(actor_id):
+  @requires_auth("delete:actor")
+  def delete_actors(actor_id, jwt):
       try:
         actor = Actor.query.filter(
             Actor.id == actor_id).one_or_none()
@@ -95,7 +100,8 @@ def create_app(test_config=None):
   ''' PATCH /actors'''
   
   @app.route('/actors/<int:actor_id>', methods=['PATCH'])
-  def patch_actors(actor_id):
+  @requires_auth("patch:actors")
+  def patch_actors(actor_id, jwt):
       try:
         actor = Actor.query.filter(
             Actor.id == actor_id).one_or_none()
