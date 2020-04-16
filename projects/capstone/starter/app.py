@@ -12,9 +12,15 @@ def create_app(test_config=None):
   setup_db(app)
   CORS(app, resources={r"*": {"origins": "*"}})
 
-  @app.route('/', methods=['GET'])
+  @app.route('/actors', methods=['GET'])
   def index():
-        return "Hello world"
+        query = Actor.query.all()
+
+        return jsonify({
+          'status': 200,
+          'success': True,
+          'actors': [i.format() for i in query]
+        })
 
   return app
 
