@@ -6,7 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from app import create_app
 from models import setup_db, Actor, Movie
-from auth.env import casting_assistant, casting_director, executive_producer 
+from auth.test_env import casting_assistant, casting_director, executive_producer 
 
 
 class CastingAgencyTestCase(unittest.TestCase):
