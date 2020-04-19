@@ -68,6 +68,7 @@ To run the tests, execute:
 python3 test_app.py
 ```
 
+delete:movie
 ## Roles
 
 Casting Assistant
@@ -79,13 +80,13 @@ Casting Director
 #####  All permissions a Casting Assistant has
 - POST:actor
 - DELETE:actor
-- PATCH:actor
-- PATCH:movie
+- PATCH:actors
+- PATCH:movies
 
 Executive Producer
 
 ##### All permissions a Casting Director has
-- POST:movie
+- POST:movies
 - DELETE:movie
 
 ## Endpoints
