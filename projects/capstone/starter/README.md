@@ -1,4 +1,6 @@
-# Coffee Shop Backend
+# Casting Agency App
+
+Full-Stack Developer Nanodegree Program capstone project
 
 ## Getting Started
 
@@ -30,58 +32,250 @@ This will install all of the required packages we selected within the `requireme
 
 - [jose](https://python-jose.readthedocs.io/en/latest/) JavaScript Object Signing and Encryption for JWTs. Useful for encoding, decoding, and verifying JWTS.
 
+## Creating DB
+Postgress server is needed for database.
+
+```createdb casting_agency```
+
+then run 
+
+```flask db upgrade```
+
+to execute DB upgrades from migration files
+
 ## Running the server
-
-From within the `./src` directory first ensure you are working using your created virtual environment.
-
-Each time you open a new terminal session, run:
-
-```bash
-export FLASK_APP=api.py;
-```
 
 To run the server, execute:
 
 ```bash
+export FLASK_APP=api.py
+export FLASK_ENV=debug
 flask run --reload
 ```
 
-The `--reload` flag will detect file changes and restart the server automatically.
+App is accessed on:
 
-## Tasks
+```
+http://0.0.0.0:8080/
+```
 
-### Setup Auth0
+## Running the tests
+Inside ```auth/test_env.py``` you can set JWT tokens for each given role, the tokens will be used to run the tests.
 
-1. Create a new Auth0 Account
-2. Select a unique tenant domain
-3. Create a new, single page web application
-4. Create a new API
-    - in API Settings:
-        - Enable RBAC
-        - Enable Add Permissions in the Access Token
-5. Create new API permissions:
-    - `get:drinks-detail`
-    - `post:drinks`
-    - `patch:drinks`
-    - `delete:drinks`
-6. Create new roles for:
-    - Barista
-        - can `get:drinks-detail`
-    - Manager
-        - can perform all actions
-7. Test your endpoints with [Postman](https://getpostman.com). 
-    - Register 2 users - assign the Barista role to one and Manager role to the other.
-    - Sign into each account and make note of the JWT.
-    ```Manager: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InpWYXFaMnRjbkpCVTZqcDVoaEgxZyJ9.eyJpc3MiOiJodHRwczovL2RhcmtpbnNwaXJhdGlvbi5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWU4ZjY0ODZjNDYyZDcwYzBkYzA5MjRlIiwiYXVkIjoiY29mZmVlX3Nob3AiLCJpYXQiOjE1ODY1MDI5ODEsImV4cCI6MTU4NjU4OTM4MSwiYXpwIjoiczZMUkU3dTlhUzdTU3kzT2E5TWxNRE9DNjMwbW5GSHYiLCJzY29wZSI6IiIsInBlcm1pc3Npb25zIjpbImRlbGV0ZTpkcmlua3MiLCJnZXQ6ZHJpbmtzLWRldGFpbCIsInBhdGNoOmRyaW5rcyIsInBvc3Q6ZHJpbmtzIl19.MnKxE0OfnpkaWJcpi4LhiqTVDKUIRViqg6uHH0PNVFeTrcyBEiPl8GrXRaa2r2I1dVTYrYZdG4oPH9s2Eodxn5CE6NNQyiqlT4yQOkp5mZhybZvr3yBuF5e6O8KyHNUXDmUwuPmhRUjvxx_Y7KgHA2TAXRUmlNaER5gZaOwdLrHkRm0C_lNSVr74xVJiRmj5MIB-VTPdFWc0vttjPU_s4dVXlxjA8YrfodC1Py2-1HIAaTB8erj51-rWyj3O1JuctiUoIzwnWbcx5gF9DJ-nur-iOf7bwlLBId2bMf2Y4eTFrE4WLLoT8Ottaoew-FMEpXSXauiRphD9WEqFZP-v1g```
-    ```Barista: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InpWYXFaMnRjbkpCVTZqcDVoaEgxZyJ9.eyJpc3MiOiJodHRwczovL2RhcmtpbnNwaXJhdGlvbi5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWU4ZjY0MzljNDYyZDcwYzBkYzA5MWM1IiwiYXVkIjoiY29mZmVlX3Nob3AiLCJpYXQiOjE1ODY1MDMwNDgsImV4cCI6MTU4NjU4OTQ0OCwiYXpwIjoiczZMUkU3dTlhUzdTU3kzT2E5TWxNRE9DNjMwbW5GSHYiLCJzY29wZSI6IiIsInBlcm1pc3Npb25zIjpbImdldDpkcmlua3MtZGV0YWlsIl19.Fa6k9-fqdt2vOtHOdQ4aSjnUTIXQ9X3LbXCN4r2PRRiJRD8OrILba4hDo486AhXeaPdb9aixQ_tVh8NDW9twL_o0pGreSXFnUIDY_6Fkiqi-lHSYvtf7hJmLkk-bD-pKY0Sne4rPpy1zAAXrA2T_1b8gnNZX9J2xaTG7IfJeiDJp_ben_i4W5rQfIvGzffHkfkcBvkSFiAjJXkHHlbdJNVwmqtn2aLZskOkd6fQZuN5VaX00UYEhUpZpHq3CGONeG58ls1V4GsSZNlKVuHKC6HDmAC-gKNFcJlQh76p5tmxoi_T8QKQ65bhG3BJ-aOI6bMhLTOLKxC7w6myIamKnZw```
-    - Import the postman collection `./starter_code/backend/udacity-fsnd-udaspicelatte.postman_collection.json`
-    - Right-clicking the collection folder for barista and manager, navigate to the authorization tab, and including the JWT in the token field (you should have noted these JWTs).
-    - Run the collection and correct any errors.
-    - Export the collection overwriting the one we've included so that we have your proper JWTs during review!
+To run the tests, execute:
 
-### Implement The Server
+```bash
+python3 test_app.py
+```
 
-There are `@TODO` comments throughout the `./backend/src`. We recommend tackling the files in order and from top to bottom:
+## Roles
 
-1. `./src/auth/auth.py`
-2. `./src/api.py`
+Casting Assistant
+
+- GET:actors
+- GET:movies
+
+Casting Director
+#####  All permissions a Casting Assistant has
+- POST:actor
+- DELETE:actor
+- PATCH:actor
+- PATCH:movie
+
+Executive Producer
+
+##### All permissions a Casting Director has
+- POST:movie
+- DELETE:movie
+
+## Endpoints
+
+### Possible Endpoints
+```
+GET '/actors'
+GET '/movies'
+POST '/actors'
+POST '/movies'
+DELETE '/actors/[actor_id]'
+DELETE '/movies/[movie_id]'
+PATCH '/actors/[actor_id]'
+PATCH '/movies/[movie_id]'
+```
+
+### Possible errors
+```
+{"error": 400, "message": "Bad request"}
+{"error": 401, "message": "Unauthorized"}
+{"error": 403, "message": "Forbidden"}
+{"error": 404, "message": "Resource not found"}
+{"error": 405, "message": "Method not allowed"}
+{"error": 422, "message": "Unprocessable entity"}
+{"error": 500, "message": "Server error"}
+```
+
+#### Example requests
+
+##### GET '/actors'
+- Fetches a dictionary of actors
+- Request Arguments: None
+- Request Body: None
+
+Sample Request:
+```
+GET http://0.0.0.0:8080/actors
+```
+
+Sample Response:
+```
+{'actors': 
+[{'age': 20, 
+'gender': 'Pre-set gender', 
+'id': 1, 
+'name': 'Pre-set name'}], 
+'status': 200, 
+'success': True, 
+'total_actors': 1}
+```
+
+##### GET '/movies'
+- Fetches a dictionary of movies
+- Request Arguments: None
+- Request Body: None
+
+Sample Request:
+```
+GET http://0.0.0.0:8080/movies
+```
+
+Sample Response:
+```
+{'movies': 
+[{'id': 1, 
+'release_date': 'Mon, 20 Apr 2020 00:00:00 GMT', 
+'title': 'Pre-set title'}], 
+'status': 200, 
+'success': True, 
+'total_movies': 1}
+```
+
+##### POST '/actors'
+- Posts a new actor to the DB
+- Request Arguments: None
+- Request Body: New actor name, New actor age, New actor age
+
+Sample Request:
+```
+POST http://0.0.0.0:8080/actors
+```
+
+Sample Response:
+```
+{'actor': 
+{'age': 20, 
+'gender': 'Test gender', 
+'id': 1, 
+'name': 'Test name'}, 
+'status': 201, 
+'success': True, 
+'total_actors': 2}
+```
+
+##### POST '/movies'
+- Posts a new movie to the DB
+- Request Arguments: None
+- Request Body: New movie title, New movie release_date
+
+Sample Request:
+```
+POST http://0.0.0.0:8080/movies
+```
+
+Sample Response:
+```
+{'movie': 
+{'id': 1, 
+'release_date': 'Sun, 19 Apr 2020 00:00:00 GMT', 
+'title': 'Test title'}, 
+'status': 201, 
+'success': True, 
+'total_movies': 2}
+```
+
+##### DELETE '/actors'
+- Deletes an actor from the DB
+- Request Arguments: Actors ID
+- Request Body: None
+
+Sample Request:
+```
+DELETE http://0.0.0.0:8080/actors/1
+```
+
+Sample Response:
+```
+{'deleted': 1, 
+'status': 200, 
+'success': True, 
+'total_actors': 0}
+```
+
+##### DELETE '/movies'
+- Deletes an movie from the DB
+- Request Arguments: Movies ID
+- Request Body: None
+
+Sample Request:
+```
+DELETE http://0.0.0.0:8080/movies/1
+```
+
+Sample Response:
+```
+{'deleted': 1, 
+'status': 200, 
+'success': True, 
+'total_movies': 0}
+```
+
+##### PATCH '/actors'
+- Patches an actor
+- Request Arguments: Actors ID
+- Request Body: New name, new age, new gender
+
+Sample Request:
+```
+PATCH http://0.0.0.0:8080/actors/1
+```
+
+Sample Response:
+```
+{'status': 200, 
+'success': True, 
+'total_actors': 1, 
+'updated': 
+{'age': 99, 
+'gender': 'female', 
+'id': 1, 
+'name': 'Patched name'}}
+```
+
+##### PATCH '/movies'
+- Patches an movie
+- Request Arguments: Movies ID
+- Request Body: New title, new release_date
+
+Sample Request:
+```
+PATCH http://0.0.0.0:8080/movies/1
+```
+
+Sample Response:
+```
+{'status': 200, 
+'success': True, 
+'total_movies': 1, 
+'updated': 
+{'id': 1, 
+'release_date': 'Thu, 01 Jan 2099 00:00:00 GMT', 
+'title': 'Patched title'}}
+```

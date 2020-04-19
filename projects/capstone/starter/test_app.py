@@ -6,7 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from app import create_app
 from models import setup_db, Actor, Movie
-from auth.test_env import casting_assistant, casting_director, executive_producer 
+from auth.test_env import casting_assistant, casting_director, executive_producer
 
 
 class CastingAgencyTestCase(unittest.TestCase):
@@ -21,9 +21,12 @@ class CastingAgencyTestCase(unittest.TestCase):
             'localhost:5432', self.database_name)
         setup_db(self.app, self.database_path)
 
-        self.casting_assistant_header = {"Authorization": f"Bearer {casting_assistant}"}
-        self.casting_director_header = {"Authorization": f"Bearer {casting_director}"}
-        self.executive_producer_header = {"Authorization": f"Bearer {executive_producer}"}
+        self.casting_assistant_header = {
+            "Authorization": f"Bearer {casting_assistant}"}
+        self.casting_director_header = {
+            "Authorization": f"Bearer {casting_director}"}
+        self.executive_producer_header = {
+            "Authorization": f"Bearer {executive_producer}"}
 
         self.new_movie = {
             "title": "Test title",
@@ -53,13 +56,12 @@ class CastingAgencyTestCase(unittest.TestCase):
             if self.old_movies:
                 for i in self.old_movies:
                     Movie.query.get(i.id).delete()
-            
 
             ''' Insert test data '''
             Movie(title="Pre-set title", release_date="2020.04.20").insert()
             Actor(name="Pre-set name",
-                     gender="Preset gender",
-                     age=20).insert()
+                  gender="Pre-set gender",
+                  age=20).insert()
 
     def tearDown(self):
         """Executed after reach test"""
@@ -84,7 +86,8 @@ class CastingAgencyTestCase(unittest.TestCase):
         data = json.loads(res.data)
         old_number_of_actors = data['total_actors']
 
-        res = self.client().post('/actors', json=self.new_actor, headers=self.casting_director_header)
+        res = self.client().post('/actors', json=self.new_actor,
+                                 headers=self.casting_director_header)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -97,7 +100,9 @@ class CastingAgencyTestCase(unittest.TestCase):
         old_number_of_actors = data['total_actors']
         id_to_delete = data['actors'][-1]['id']
 
-        res = self.client().delete(f'/actors/{id_to_delete}', headers=self.casting_director_header)
+        res = self.client().delete(
+            f'/actors/{id_to_delete}',
+            headers=self.casting_director_header)
         data = json.loads(res.data)
         actor = Actor.query.filter(
             Actor.id == id_to_delete).one_or_none()
@@ -113,13 +118,20 @@ class CastingAgencyTestCase(unittest.TestCase):
         data = json.loads(res.data)
         id_to_patch = data['actors'][-1]['id']
 
-        res = self.client().patch(f'/actors/{id_to_patch}', json={"name":"Patched name", "age":99, "gender": "female"}, headers=self.casting_director_header)
+        res = self.client().patch(
+            f'/actors/{id_to_patch}',
+            json={
+                "name": "Patched name",
+                "age": 99,
+                "gender": "female"},
+            headers=self.casting_director_header)
         data = json.loads(res.data)
-
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
-        self.assertEqual(data['updated'], {'age': 99, 'gender': 'female', 'id': id_to_patch, 'name': 'Patched name'})
+        self.assertEqual(
+            data['updated'], {
+                'age': 99, 'gender': 'female', 'id': id_to_patch, 'name': 'Patched name'})
 
     def test_get_movies(self):
         res = self.client().get('/movies', headers=self.casting_assistant_header)
@@ -135,7 +147,8 @@ class CastingAgencyTestCase(unittest.TestCase):
         data = json.loads(res.data)
         old_number_of_movies = data['total_movies']
 
-        res = self.client().post('/movies', json=self.new_movie, headers=self.executive_producer_header)
+        res = self.client().post('/movies', json=self.new_movie,
+                                 headers=self.executive_producer_header)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -148,7 +161,9 @@ class CastingAgencyTestCase(unittest.TestCase):
         old_number_of_movies = data['total_movies']
         id_to_delete = data['movies'][-1]['id']
 
-        res = self.client().delete(f'/movies/{id_to_delete}', headers=self.executive_producer_header)
+        res = self.client().delete(
+            f'/movies/{id_to_delete}',
+            headers=self.executive_producer_header)
         data = json.loads(res.data)
         movie = Movie.query.filter(
             Movie.id == id_to_delete).one_or_none()
@@ -164,13 +179,20 @@ class CastingAgencyTestCase(unittest.TestCase):
         data = json.loads(res.data)
         id_to_patch = data['movies'][-1]['id']
 
-        res = self.client().patch(f'/movies/{id_to_patch}', json={"title":"Patched title", "release_date":"2099.01.01"}, headers=self.casting_director_header)
+        res = self.client().patch(
+            f'/movies/{id_to_patch}',
+            json={
+                "title": "Patched title",
+                "release_date": "2099.01.01"},
+            headers=self.casting_director_header)
         data = json.loads(res.data)
-
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
-        self.assertEqual(data['updated'], {'release_date': 'Thu, 01 Jan 2099 00:00:00 GMT', 'title': 'Patched title', 'id': id_to_patch})
+        self.assertEqual(data['updated'],
+                         {'release_date': 'Thu, 01 Jan 2099 00:00:00 GMT',
+                          'title': 'Patched title',
+                          'id': id_to_patch})
 
     def test_post_movies_400_bad_request(self):
         res = self.client().post('/movies', json={}, headers=self.executive_producer_header)
