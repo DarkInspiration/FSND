@@ -145,7 +145,7 @@ def create_app(test_config=None):
             return jsonify({
                 'status': 200,
                 'success': True,
-                'actors': [i.format() for i in query],
+                'movies': [i.format() for i in query],
                 'total_movies': len(query)
             })
         except BaseException:
@@ -241,6 +241,22 @@ def create_app(test_config=None):
             "error": 400,
             "message": "Bad request",
         }), 400
+
+    @app.errorhandler(401)
+    def bad_request(error):
+        return jsonify({
+            "success": False,
+            "error": 401,
+            "message": "Unauthorized",
+        }), 401
+
+    @app.errorhandler(403)
+    def bad_request(error):
+        return jsonify({
+            "success": False,
+            "error": 403,
+            "message": "Forbidden",
+        }), 403
 
     @app.errorhandler(404)
     def not_found(error):
